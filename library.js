@@ -1,13 +1,12 @@
 //check value of local storage
-let itemsArray = localStorage.getItem('items')
-  ? JSON.parse(localStorage.getItem('items'))
+let savedArticles = localStorage.getItem('articles')
+  ? JSON.parse(localStorage.getItem('articles'))
   : [];
 
 const results = document.querySelector('.results');
 
 const template = (data) => {
   for (let item of data) {
-    console.log(data);
     const article = document.createElement('div');
     article.classList.add('card');
     structure(article, 'delete-library', 'Delete from library', item);
@@ -17,14 +16,14 @@ const template = (data) => {
 };
 
 const libraryRender = () => {
-  if (itemsArray.length === 0) {
+  if (savedArticles.length === 0) {
     results.innerHTML = `<p>Nothing in your library</p>`;
   } else {
     results.innerHTML = ``;
-    template(itemsArray);
+    template(savedArticles);
   }
 };
-libraryRender(itemsArray);
+libraryRender();
 
 const asSortByUpdate = document.querySelector('#as-sort-by-update');
 const desSortByUpdate = document.querySelector('#des-sort-by-update');
@@ -36,13 +35,13 @@ const createSort = (func, btn1, btn2, style1, style2) => {
   btn1.style.display = style1;
   btn2.style.display = style2;
   results.innerHTML = '';
-  libraryRender(itemsArray);
+  libraryRender();
 };
 
 asSortByUpdate.addEventListener('click', () => {
   createSort(
     () => {
-      itemsArray = itemsArray.sort((a, b) => {
+      savedArticles = savedArticles.sort((a, b) => {
         let keyA = new Date(a.updatedAt),
           keyB = new Date(b.updatedAt);
 
@@ -61,7 +60,7 @@ asSortByUpdate.addEventListener('click', () => {
 desSortByUpdate.addEventListener('click', () => {
   createSort(
     () => {
-      itemsArray = itemsArray.sort((a, b) => {
+      savedArticles = savedArticles.sort((a, b) => {
         let keyA = new Date(a.updatedAt),
           keyB = new Date(b.updatedAt);
 
@@ -80,7 +79,7 @@ desSortByUpdate.addEventListener('click', () => {
 asSortByTitle.addEventListener('click', () => {
   createSort(
     () => {
-      itemsArray = itemsArray.sort((a, b) => {
+      savedArticles = savedArticles.sort((a, b) => {
         let keyA = a.title,
           keyB = b.title;
 
@@ -99,7 +98,7 @@ asSortByTitle.addEventListener('click', () => {
 desSortByTitle.addEventListener('click', () => {
   createSort(
     () => {
-      itemsArray = itemsArray.sort((a, b) => {
+      savedArticles = savedArticles.sort((a, b) => {
         let keyA = a.title,
           keyB = b.title;
 
