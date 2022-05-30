@@ -76,3 +76,18 @@ button {
 #des-sort-by-title {
   display: none;
 }
+
+@media (max-width: 768px) {
+  .card {
+    padding: 2px 20px 20px 20px;
+  }
+  .counter {
+    margin-bottom: 15px;
+  }
+  .buttons a {
+    margin: 10px 10px 10px 10px;
+  }
+  .buttons button {
+    margin: 10px 10px 10px 10px;
+  }
+}
