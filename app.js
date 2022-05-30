@@ -1,53 +1,46 @@
-const fetchData = async (articlesNumbers) => {
-  const response = await axios.get(
-    'https://api.spaceflightnewsapi.net/v3/articles',
-    {
-      params: {
-        _limit: articlesNumbers,
-      },
-    }
-  );
-  return response.data;
-};
+const spaceFlightNewsApiV3Url = 'https://api.spaceflightnewsapi.net/v3';
+const defaultArticlesPerPage = 15;
+const defaultArticlesOffset = 0;
 
-const paginationData = async (numberOfPagination, articlesNumbers) => {
+const fetchArticles = async (maxArticlesPerPage = defaultArticlesPerPage, articlesOffset = defaultArticlesOffset) => {
   const response = await axios.get(
-    'https://api.spaceflightnewsapi.net/v3/articles',
-    {
-      params: {
-        _start: numberOfPagination,
-        _limit: articlesNumbers,
-      },
-    }
+      `${spaceFlightNewsApiV3Url}/articles`,
+      {
+        params: {
+          _start: articlesOffset,
+          _limit: maxArticlesPerPage,
+        },
+      }
   );
   return response.data;
 };
 
 const fetchCounter = async () => {
   const response = await axios.get(
-    'https://api.spaceflightnewsapi.net/v3/articles/count'
+      `${spaceFlightNewsApiV3Url}/articles/count`
   );
 
   return response.data;
 };
 
-const fetchID = async (id) => {
+const fetchArticle = async (id) => {
   const response = await axios.get(
-    'https://api.spaceflightnewsapi.net/v3/articles',
-    {
-      params: {
-        id: id,
-      },
-    }
+      `${spaceFlightNewsApiV3Url}/articles`,
+      {
+        params: {
+          id: id,
+        },
+      }
   );
 
   return response.data;
 };
-//number of value to paginate
-let skipValue = 15;
 
-let itemsArray = localStorage.getItem('items')
-  ? JSON.parse(localStorage.getItem('items'))
+//number of value to paginate
+let currentArticlesOffset = defaultArticlesPerPage;
+
+let savedArticles = localStorage.getItem('articles')
+  ? JSON.parse(localStorage.getItem('articles'))
   : [];
 
 const numberOfRender = document.querySelector('.number-of-render');
@@ -57,26 +50,26 @@ const counter = document.querySelector('.counter');
 //first render and render when user change value of articles
 const newRender = async () => {
   if (numberOfRender.value === '') {
-    numberOfRender.value = 15;
+    numberOfRender.value = defaultArticlesPerPage;
   }
-  const items = await fetchData(numberOfRender.value);
+  const articles = await fetchArticles(numberOfRender.value);
 
   results.innerHTML = '';
-  skipValue = parseInt(numberOfRender.value);
+  currentArticlesOffset = parseInt(numberOfRender.value);
 
-  builder(items);
+  builder(articles);
 
   const quantity = await fetchCounter();
-  counter.innerHTML = counterTemplate(skipValue, quantity);
+  counter.innerHTML = counterTemplate(currentArticlesOffset, quantity);
 };
 
 //function to paginate
-const paginationRender = async (skipValue) => {
-  const items = await paginationData(skipValue, parseInt(numberOfRender.value));
+const paginationRender = async (articlesOffset) => {
+  const articles = await fetchArticles(parseInt(numberOfRender.value), articlesOffset);
 
-  builder(items);
+  builder(articles);
   const quantity = await fetchCounter();
-  counter.innerHTML = counterTemplate(skipValue, quantity);
+  counter.innerHTML = counterTemplate(articlesOffset, quantity);
 };
 
 //template to render articles
@@ -84,7 +77,7 @@ const builder = (items) => {
   for (let item of items) {
     const article = document.createElement('div');
     article.classList.add('card');
-    if (itemsArray.some((e) => e.id === item.id)) {
+    if (savedArticles.some((e) => e.id === item.id)) {
       structure(article, 'delete-library', 'Delete from library', item);
     } else {
       structure(article, 'add-library', 'Add to library', item);
@@ -100,16 +93,20 @@ const counterTemplate = (number, quantity) => {
     <p>Counter: ${number}/${quantity}</p>
   `;
 };
-newRender();
+
+window.addEventListener('load', function () {
+  newRender();
 
 //listeners for input and scroll
-numberOfRender.addEventListener('input', debounce(newRender, 500));
-window.addEventListener('scroll', () => {
-  if (
-    window.scrollY + window.innerHeight >=
-    document.documentElement.scrollHeight
-  ) {
-    skipValue = parseInt(numberOfRender.value) + skipValue;
-    paginationRender(skipValue);
-  }
+  numberOfRender.addEventListener('input', debounce(newRender, 500));
+  window.addEventListener('scroll', () => {
+    if (
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight
+    ) {
+      currentArticlesOffset = parseInt(numberOfRender.value) + currentArticlesOffset;
+      paginationRender(currentArticlesOffset);
+    }
+  });
 });
+
