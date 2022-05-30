@@ -21,7 +21,7 @@ const structure = (root, btnClass, btnTxt, item) => {
       <span >${string}</span>
       <div class="card-info">
       <p>Website:${item.newsSite}</p>
-      <p>Publishet at:${time}</p>
+      <p>Published at:${time}</p>
       </div>
       <div class="buttons">
         <a href="${item.url}">Read article</a>
