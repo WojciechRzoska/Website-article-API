@@ -21,7 +21,7 @@ const structure = (root, btnClass, btnTxt, item) => {
       <span >${string}</span>
       <div class="card-info">
       <p>Website:${item.newsSite}</p>
-      <p>Published at:${time}</p>
+      <p>Publishet at:${time}</p>
       </div>
       <div class="buttons">
         <a href="${item.url}">Read article</a>
@@ -35,11 +35,11 @@ const generateAddButton = (renderFunction) => {
   const libraryButton = document.querySelectorAll('.add-library');
   libraryButton.forEach((item) => {
     item.addEventListener('click', async (e) => {
-      const response = await fetchID(item.value);
+      const response = await fetchArticle(item.value);
       e.preventDefault();
 
-      itemsArray.push(response[0]);
-      localStorage.setItem('items', JSON.stringify(itemsArray));
+      savedArticles.push(response[0]);
+      localStorage.setItem('articles', JSON.stringify(savedArticles));
       item.style.display = 'none';
       renderFunction();
     });
@@ -51,8 +51,8 @@ const generateDelButton = (renderFunction) => {
 
   deleteButton.forEach((item) => {
     item.addEventListener('click', () => {
-      itemsArray = itemsArray.filter((obj) => obj.id != item.value);
-      localStorage.setItem('items', JSON.stringify(itemsArray));
+      savedArticles = savedArticles.filter((obj) => obj.id != item.value);
+      localStorage.setItem('articles', JSON.stringify(savedArticles));
       renderFunction();
     });
   });
