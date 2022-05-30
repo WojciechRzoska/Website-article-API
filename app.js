@@ -84,43 +84,13 @@ const builder = (items) => {
   for (let item of items) {
     const article = document.createElement('div');
     article.classList.add('card');
-    const string = item.summary;
     if (itemsArray.some((e) => e.id === item.id)) {
-      article.innerHTML = `
-      <h2>${item.title}</h2>  
-      <div class="card-body">
-          <span >${string.substr(0, 200)}</span>
-          <div class="card-info">
-          <p>Website:${item.newsSite}</p>
-          <p>Publishet at:${item.publishedAt}</p>
-          </div>
-          <div class="buttons">
-            <a href="${item.url}">Read article</a>
-            <button class="delete-library" value="${
-              item.id
-            }">Delete from library</button>
-          </div>
-      </div>   
-      `;
+      structure(article, 'delete-library', 'Delete from library', item);
     } else {
-      article.innerHTML = `
-    <h2>${item.title}</h2>  
-    <div class="card-body">
-        <span >${string.substr(0, 200)}</span>
-        <div class="card-info">
-        <p>Website:${item.newsSite}</p>
-        <p>Publishet at:${item.publishedAt}</p>
-        </div>
-        <div class="buttons">
-          <a href="${item.url}">Read article</a>
-          <button class="add-library" value="${item.id}">Add to library</button>
-        </div>
-    </div>   
-    `;
+      structure(article, 'add-library', 'Add to library', item);
     }
     results.appendChild(article);
   }
-
   generateAddButton(newRender);
   generateDelButton(newRender);
 };

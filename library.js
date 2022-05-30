@@ -10,20 +10,7 @@ const template = (data) => {
     console.log(data);
     const article = document.createElement('div');
     article.classList.add('card');
-    article.innerHTML = `
-      <h2>${item.title}</h2>  
-      <div class="card-body">
-          <span>${item.summary}</span>
-          <div class="card-info">
-          <p>Website:${item.newsSite}</p>
-          <p>Publishet at:${item.publishedAt}</p>
-          </div>
-          <div class="buttons">
-            <a href="${item.url}">Read article</a>
-            <button class="delete-library" value="${item.id}">Delete from library</button>
-          </div>
-      </div>   
-      `;
+    structure(article, 'delete-library', 'Delete from library', item);
     results.appendChild(article);
   }
   generateDelButton(libraryRender);
