@@ -1,4 +1,4 @@
-# recruitment-task-frontend-intership
+# Website article API
 author: Wojciech Rzóska
 
 about project: 
